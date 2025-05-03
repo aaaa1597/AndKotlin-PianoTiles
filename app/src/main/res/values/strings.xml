@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">PianoTiles</string>
+    <string name="Start">Start</string>
+    <string name="Easy">Easy</string>
+    <string name="Normal">Normal</string>
+    <string name="Hard">Hard</string>
+    <string name="Volume">Volume</string>
+    <string name="Done">Done</string>
+    <string name="Default">Reset to default</string>
+    <string name="Restart">Restart</string>
+    <string name="Resume">Resume</string>
+    <string name="Quit">Quit Game</string>
+    <string name="Main_menu">Main menu</string>
+    <string name="Score">Score</string>
+    <string name="Level">Level</string>
+    <string name="three">3</string>
+    <string name="two">2</string>
+    <string name="one">1</string>
+    <string name="volume_on">volume on</string>
+    <string name="setting">setting</string>
+    <string name="bgm_musmus">BGM：MusMus</string>
 </resources>
