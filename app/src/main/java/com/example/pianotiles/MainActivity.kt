@@ -9,13 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var  fragmentManager: FragmentManager
     private lateinit var  mainMenuFragment: MainMenuFragment
 //    private lateinit var  gameplayFragment: GameplayFragment
 //    private lateinit var  settingFragment: SettingFragment
 //    private lateinit var  pauseFragment: PauseFragment
 //    private lateinit var  gameOverFragment: GameOverFragment
 //    private lateinit var  highScoreFragment: HighScoreFragment
+    private lateinit var  fragmentManager: FragmentManager
     private var fcurrent: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,9 +29,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         mainMenuFragment = MainMenuFragment()
-        fragmentManager = this.supportFragmentManager
-        fragmentManager.addOnBackStackChangedListener {
-            fcurrent = fragmentManager.findFragmentById(R.id.fragment_container)!!
+        fragmentManager = this.supportFragmentManager.apply {
+            addOnBackStackChangedListener { fcurrent = fragmentManager.findFragmentById(R.id.fragment_container)!! }
         }
         changePage(1)
     }
@@ -132,13 +131,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun changeVolume(vol: Int) {
-        mainMenuFragment.changeVolume(vol)
-    }
-
-    fun changeBackground(id: Int) {
-        mainMenuFragment.changeBackground(id)
-    }
+    fun changeVolume(vol: Int)
+        = mainMenuFragment.changeVolume(vol)
 
     fun setDefault() {
         mainMenuFragment.setDefault()

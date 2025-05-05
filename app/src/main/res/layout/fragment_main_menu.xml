@@ -7,12 +7,11 @@
     tools:context=".MainMenuFragment">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_musicflg"
+        android:id="@+id/fab_mute"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
-        android:background="#00000000"
         android:outlineAmbientShadowColor="#00FFFFFF"
         android:outlineSpotShadowColor="#00FFFFFF"
         android:contentDescription="@string/volume_on"
@@ -20,7 +19,7 @@
         app:backgroundTint="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:srcCompat="@drawable/music_on_48" />
+        app:srcCompat="@drawable/volume_on_48" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_settings"
@@ -44,13 +43,13 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="3dp"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@id/normal"
-        app:layout_constraintLeft_toLeftOf="@id/easy"
-        app:layout_constraintRight_toRightOf="@id/hard"
-        android:text="Hello" />
+        app:layout_constraintBottom_toTopOf="@id/btn_normal"
+        app:layout_constraintLeft_toLeftOf="@id/btn_easy"
+        app:layout_constraintRight_toRightOf="@id/btn_hard"
+        android:text="aaa" />
 
     <Button
-        android:id="@+id/easy"
+        android:id="@+id/btn_easy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Easy"
@@ -58,12 +57,14 @@
         android:textColor="@color/gray"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/normal" />
+        app:layout_constraintRight_toLeftOf="@id/btn_normal" />
 
     <Button
-        android:id="@+id/normal"
+        android:id="@+id/btn_normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:text="@string/Normal"
         android:textStyle="bold"
         android:textColor="@color/gray"
@@ -73,7 +74,7 @@
         app:layout_constraintRight_toRightOf="parent" />
 
     <Button
-        android:id="@+id/hard"
+        android:id="@+id/btn_hard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Hard"
@@ -81,15 +82,17 @@
         android:textColor="@color/gray"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/normal" />
+        app:layout_constraintLeft_toRightOf="@id/btn_normal" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_marginEnd="5dp"
-        android:text="@string/bgm_musmus"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        android:text="@string/Start"
+        android:textStyle="bold"
+        android:textColor="@color/gray"
+        app:layout_constraintTop_toBottomOf="@id/btn_normal"
+        app:layout_constraintLeft_toLeftOf="@id/btn_easy"
+        app:layout_constraintRight_toRightOf="@id/btn_hard"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
