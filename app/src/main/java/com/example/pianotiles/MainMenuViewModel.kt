@@ -42,11 +42,13 @@ class MainMenuViewModel : ViewModel() {
     private val _nowidx: MutableStateFlow<Int> = MutableStateFlow(0)
     val nowidx = _nowidx.asStateFlow()
     fun nextSong() {
+        Log.d("aaaaa", "aaaaa before-idx=${_nowidx.value}/${ _jukebox.value.numofSong()}")
         _jukebox.value.stop(_nowidx.value)
         _nowidx.value++
-        if(_nowidx.value >= _jukebox.value.numofSong())
+        if(_nowidx.value >= _jukebox.value.numofSong()-1)
             _nowidx.value = 0
         _jukebox.value.play(_nowidx.value)
+        Log.d("aaaaa", "aaaaa after-idx=${_nowidx.value}/${ _jukebox.value.numofSong()}")
     }
     private lateinit var _jukebox: MutableStateFlow<Jukebox>
     fun setJukebox(jukebox: Jukebox) { _jukebox = MutableStateFlow(jukebox) }

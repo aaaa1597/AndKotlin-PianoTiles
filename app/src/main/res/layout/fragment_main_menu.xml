@@ -39,14 +39,16 @@
     
     <TextView
         android:id="@+id/txt_song_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="3dp"
         android:textSize="24sp"
+        android:paddingTop="10sp"
+        android:paddingBottom="10sp"
+        android:gravity="center_horizontal"
         app:layout_constraintBottom_toTopOf="@id/btn_normal"
         app:layout_constraintLeft_toLeftOf="@id/btn_easy"
-        app:layout_constraintRight_toRightOf="@id/btn_hard"
-        android:text="aaa" />
+        app:layout_constraintRight_toRightOf="@id/btn_hard" />
 
     <Button
         android:id="@+id/btn_easy"

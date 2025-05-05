@@ -31,7 +31,7 @@ class Jukebox(activity: Activity) {
     )
     /* 関数 */
     fun play(idx: Int) { _musicPlayers[idx]._mediaPlayser.start()}
-    fun stop(idx: Int) { _musicPlayers[idx]._mediaPlayser.stop() }
+    fun stop(idx: Int) { _musicPlayers[idx]._mediaPlayser.apply { stop(); prepare() } }
     fun nowSongName(idx: Int): String = _musicPlayers.get(idx)._name
     fun setVolume(idx: Int, volume: Float) {
         _musicPlayers.get(idx)._mediaPlayser.setVolume(volume, volume)

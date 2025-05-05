@@ -22,15 +22,11 @@ class MainMenuFragment : Fragment() {
 
     private lateinit var _binding: FragmentMainMenuBinding
     private val binding get() = _binding
-    private val fragmentListener: FragmentListener? = null
-    private var musicStarted = false
-    private var nowPlaying = 0
-    private val backgroundId = 0
     private lateinit var viewModel: MainMenuViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[MainMenuViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[MainMenuViewModel::class.java]
     }
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -43,7 +39,9 @@ class MainMenuFragment : Fragment() {
         /* ミュートボタン押下 */
         _binding.fabMute.setOnClickListener{ viewModel.toggleMute() }
         /* 設定ボタン押下 */
+        _binding.fabSettings.setOnClickListener {
 
+        }
         /* Jukebox初期化 */
         viewModel.setJukebox(Jukebox(requireActivity()))
         binding.txtSongName.text = viewModel.getNowSongName()
@@ -119,37 +117,11 @@ class MainMenuFragment : Fragment() {
 
     }
 
-    fun play() {
-//        TODO("Not yet implemented")
-    }
-
-    fun pauseSound() {
-//        mediaPlayer.pause()
-    }
-
-    fun resumeSound() {
-//        mediaPlayer.start()
-    }
-
     fun changeVolume(vol: Int) {
         viewModel.setVolume(vol.toFloat())
     }
 
     fun setDefault() {
         viewModel.init()
-    }
-
-    private fun mute() {
-        if (viewModel.isMute()) {
-            binding.fabMute.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.volume_off_48))
-//            mediaPlayer.setVolume(0f, 0f)
-        } else {
-            binding.fabMute.setImageDrawable( ContextCompat.getDrawable( requireContext(), R.drawable.volume_on_48))
-//            mediaPlayer.setVolume(viewModel.getVolume(), viewModel.getVolume())
-        }
-    }
-
-    fun isMute(): Boolean {
-        return false
     }
 }
