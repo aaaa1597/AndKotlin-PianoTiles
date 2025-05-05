@@ -1,8 +1,8 @@
 package com.example.pianotiles
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlin.math.ln
 
@@ -13,19 +13,24 @@ class MainMenuViewModel : ViewModel() {
     fun isMute(): Boolean = mute.value
     fun toggleMute() {
         _mute.value = !_mute.value
+        if(_mute.value)
+            _jukebox.value.setVolume(nowidx.value, 0f)
+        else
+            _jukebox.value.setVolume(nowidx.value, volume.value)
     }
 
     /* ボリューム設定 */
     private val _volume: MutableStateFlow<Float> = MutableStateFlow<Float>(1f)
     private val volume = _volume.asStateFlow()
     fun getVolume(): Float = volume.value
-    fun setVolume(volume: Float): Float {
+    fun setVolume(volume: Float) { _volume.value = volume }
+    fun changeVolume(volume: Float) {
+        /* 引数0..100, 出力0f..1f */
         var vol = (1 - ln((100 - volume).toDouble()) / ln(100.0)).toFloat()
         if (java.lang.Double.isInfinite(vol.toDouble())) {
             vol = 1f
         }
         _volume.value = vol
-        return vol
     }
     /* ゲーム難易度 */
     private val _level: MutableStateFlow<Int> = MutableStateFlow<Int>(1)

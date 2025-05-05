@@ -21,7 +21,6 @@ class MainMenuFragment : Fragment() {
     private lateinit var _binding: FragmentMainMenuBinding
     private val binding get() = _binding
     private val fragmentListener: FragmentListener? = null
-    private val musicList: List<Music> = MusicFiles.music.toList()
     private var musicStarted = false
     private var nowPlaying = 0
     private val backgroundId = 0
@@ -37,10 +36,12 @@ class MainMenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         /* ミュートボタン押下 */
         _binding.fabMute.setOnClickListener{ viewModel.toggleMute() }
+        /* 設定ボタン押下 */
+
         /* Jukebox初期化 */
         viewModel.setJukebox(Jukebox(requireActivity()))
         binding.txtSongName.text = viewModel.getNowSongName()
-        viewModel.setVolume(50f)
+        viewModel.setVolume(1f)
         viewModel.playSong()
 
         _binding.btnEasy.setOnClickListener{ setLevel(0) }
@@ -49,17 +50,13 @@ class MainMenuFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                /* ミュートボタン押下するので、viewModel.muteを監視 */
+                /* ミュートボタン押下、でviewModel.muteを監視 */
                 launch {
                     viewModel.mute.collect {
-                        if(it) {
-                            _binding.fabMute.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.volume_on_48))
-//                            mediaPlayer.setVolume(0f, 0f)
-                        }
-                        else {
+                        if(it)
                             _binding.fabMute.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.volume_off_48))
-//                            mediaPlayer.setVolume(viewModel.getVolume(), viewModel.getVolume())
-                        }
+                        else
+                            _binding.fabMute.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.volume_on_48))
                     }
                 }
 //                /* 曲名Text押下 */
@@ -86,8 +83,7 @@ class MainMenuFragment : Fragment() {
     }
 
     fun changeVolume(vol: Int) {
-        val fvol = viewModel.setVolume(vol.toFloat())
-//        mediaPlayer.setVolume(fvol, fvol)
+        viewModel.setVolume(vol.toFloat())
     }
 
     fun setDefault() {
