@@ -8,7 +8,7 @@ import kotlin.math.ln
 
 class MainMenuViewModel : ViewModel() {
     /* ミュート設定 */
-    private val _mute: MutableStateFlow<Boolean> = MutableStateFlow<Boolean>(false)
+    private val _mute: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val mute = _mute.asStateFlow()
     fun isMute(): Boolean = mute.value
     fun toggleMute() {
@@ -20,7 +20,7 @@ class MainMenuViewModel : ViewModel() {
     }
 
     /* ボリューム設定 */
-    private val _volume: MutableStateFlow<Float> = MutableStateFlow<Float>(1f)
+    private val _volume: MutableStateFlow<Float> = MutableStateFlow(1f)
     private val volume = _volume.asStateFlow()
     fun getVolume(): Float = volume.value
     fun setVolume(volume: Float) { _volume.value = volume }
@@ -32,14 +32,22 @@ class MainMenuViewModel : ViewModel() {
         }
         _volume.value = vol
     }
-    /* ゲーム難易度 */
-    private val _level: MutableStateFlow<Int> = MutableStateFlow<Int>(1)
-    private val level = _level.asStateFlow()
+
+    /* 難易度設定 */
+    private val _level: MutableStateFlow<GameLevel> = MutableStateFlow(GameLevel.easy)
+    val level = _level.asStateFlow()
     fun getLevel() = level.value
-    fun setLevel(level: Int) { _level.value = level }
+    fun setLevel(level: GameLevel) { _level.value = level }
     /* 楽曲再生 */
-    private val _nowidx: MutableStateFlow<Int> = MutableStateFlow<Int>(0)
-    private val nowidx = _nowidx.asStateFlow()
+    private val _nowidx: MutableStateFlow<Int> = MutableStateFlow(0)
+    val nowidx = _nowidx.asStateFlow()
+    fun nextSong() {
+        _jukebox.value.stop(_nowidx.value)
+        _nowidx.value++
+        if(_nowidx.value >= _jukebox.value.numofSong())
+            _nowidx.value = 0
+        _jukebox.value.play(_nowidx.value)
+    }
     private lateinit var _jukebox: MutableStateFlow<Jukebox>
     fun setJukebox(jukebox: Jukebox) { _jukebox = MutableStateFlow(jukebox) }
     fun getNowSongName() = _jukebox.value.nowSongName(nowidx.value)
@@ -50,7 +58,7 @@ class MainMenuViewModel : ViewModel() {
     fun init() {
         _mute.value = false
         _volume.value = 50f
-        _level.value = 1
+        _level.value = GameLevel.easy
         _jukebox.value.stop(nowidx.value)
         _nowidx.value = 0
     }

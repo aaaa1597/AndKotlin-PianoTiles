@@ -7,7 +7,7 @@ class Jukebox(activity: Activity) {
     /* MusicPlayerクラス(外には見せない) */
     private class AaaMusicPlayer(activity: Activity, id: Int, name: String) {
         val _id = id
-        val _mediaPlayser:MediaPlayer = MediaPlayer.create(activity, R.raw.jingle_bells)
+        val _mediaPlayser:MediaPlayer = MediaPlayer.create(activity, id)
         val _name = name
         companion object {
             fun create(activity: Activity, id: Int, name: String): AaaMusicPlayer {
@@ -36,4 +36,5 @@ class Jukebox(activity: Activity) {
     fun setVolume(idx: Int, volume: Float) {
         _musicPlayers.get(idx)._mediaPlayser.setVolume(volume, volume)
     }
+    fun numofSong(): Int = _musicPlayers.size
 }

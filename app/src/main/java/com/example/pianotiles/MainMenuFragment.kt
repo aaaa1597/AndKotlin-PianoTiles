@@ -13,6 +13,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.pianotiles.databinding.FragmentMainMenuBinding
 import kotlinx.coroutines.launch
 
+enum class GameLevel {easy,normal,hard}
+
 class MainMenuFragment : Fragment() {
     companion object {
         fun newInstance() = MainMenuFragment()
@@ -26,8 +28,12 @@ class MainMenuFragment : Fragment() {
     private val backgroundId = 0
     private lateinit var viewModel: MainMenuViewModel
 
-    override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[MainMenuViewModel::class.java]
+    }
+
+    override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentMainMenuBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,9 +50,13 @@ class MainMenuFragment : Fragment() {
         viewModel.setVolume(1f)
         viewModel.playSong()
 
-        _binding.btnEasy.setOnClickListener{ setLevel(0) }
-        _binding.btnNormal.setOnClickListener{ setLevel(1) }
-        _binding.btnHard.setOnClickListener{ setLevel(2) }
+        /* 曲選択 */
+        _binding.txtSongName.setOnClickListener { viewModel.nextSong() }
+
+        /* レベル設定 */
+        _binding.btnEasy.setOnClickListener{ viewModel.setLevel(GameLevel.easy) }
+        _binding.btnNormal.setOnClickListener{ viewModel.setLevel(GameLevel.normal) }
+        _binding.btnHard.setOnClickListener{ viewModel.setLevel(GameLevel.hard) }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -59,12 +69,51 @@ class MainMenuFragment : Fragment() {
                             _binding.fabMute.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.volume_on_48))
                     }
                 }
-//                /* 曲名Text押下 */
-//                launch {
-//                    viewModel.songidx.collect {
-//                        Jukebox.playNext()
-//                    }
-//                }
+
+                /* 楽曲ラベル押下、でviewModel.nowidxを監視 */
+                launch {
+                    viewModel.nowidx.collect {
+                        _binding.txtSongName.text = viewModel.getNowSongName()
+                    }
+                }
+
+                /* easy/normal/hardボタン押下、でviewModel.levelを監視 */
+                launch {
+                    viewModel.level.collect {
+                        when(it) {
+                            GameLevel.easy -> {
+                                /* ボタン背景設定 */
+                                _binding.btnEasy.setBackgroundResource(R.drawable.round_green_button)
+                                _binding.btnNormal.setBackgroundResource(R.drawable.round_gray_button)
+                                _binding.btnHard.setBackgroundResource(R.drawable.round_gray_button)
+                                /* Text色変更 */
+                                _binding.btnEasy.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+                                _binding.btnNormal.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
+                                _binding.btnHard.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
+                            }
+                            GameLevel.normal -> {
+                                /* ボタン背景設定 */
+                                _binding.btnEasy.setBackgroundResource(R.drawable.round_gray_button)
+                                _binding.btnNormal.setBackgroundResource(R.drawable.round_yellow_button)
+                                _binding.btnHard.setBackgroundResource(R.drawable.round_gray_button)
+                                /* Text色変更 */
+                                _binding.btnEasy.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
+                                _binding.btnNormal.setTextColor(ContextCompat.getColor(requireContext(), R.color.yellow))
+                                _binding.btnHard.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
+                            }
+                            GameLevel.hard -> {
+                                /* ボタン背景設定 */
+                                _binding.btnEasy.setBackgroundResource(R.drawable.round_gray_button)
+                                _binding.btnNormal.setBackgroundResource(R.drawable.round_gray_button)
+                                _binding.btnHard.setBackgroundResource(R.drawable.round_red_button)
+                                /* Text色変更 */
+                                _binding.btnEasy.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
+                                _binding.btnNormal.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
+                                _binding.btnHard.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -102,45 +151,5 @@ class MainMenuFragment : Fragment() {
 
     fun isMute(): Boolean {
         return false
-    }
-
-    private fun setLevel(level: Int) {
-        if (level == 0) {
-            binding.btnEasy.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.round_green_button)
-            binding.btnNormal.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.round_gray_button)
-            binding.btnHard.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.round_gray_button)
-
-            binding.btnEasy.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-            binding.btnNormal.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
-            binding.btnHard.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
-            viewModel.setLevel(0)
-        } else if (level == 1) {
-            binding.btnEasy.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.round_gray_button)
-            binding.btnNormal.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.round_yellow_button)
-            binding.btnHard.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.round_gray_button)
-
-            binding.btnEasy.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
-            binding.btnNormal.setTextColor(ContextCompat.getColor(requireContext(), R.color.yellow))
-            binding.btnHard.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
-            viewModel.setLevel(1)
-        } else {
-            binding.btnEasy.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.round_gray_button)
-            binding.btnNormal.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.round_gray_button)
-            binding.btnHard.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.round_red_button)
-
-            binding.btnEasy.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
-            binding.btnNormal.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
-            binding.btnHard.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-            viewModel.setLevel(2)
-        }
     }
 }
