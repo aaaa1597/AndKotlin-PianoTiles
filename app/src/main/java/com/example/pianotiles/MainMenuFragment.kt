@@ -1,7 +1,5 @@
 package com.example.pianotiles
 
-import android.media.MediaPlayer
-import android.media.MediaPlayer.OnCompletionListener
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,17 +12,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.pianotiles.databinding.FragmentMainMenuBinding
 import kotlinx.coroutines.launch
-import java.util.Random
 
-
-class MainMenuFragment : Fragment(), OnCompletionListener {
+class MainMenuFragment : Fragment() {
     companion object {
         fun newInstance() = MainMenuFragment()
     }
 
     private lateinit var _binding: FragmentMainMenuBinding
     private val binding get() = _binding
-    private lateinit var mediaPlayer: MediaPlayer
     private val fragmentListener: FragmentListener? = null
     private val musicList: List<Music> = MusicFiles.music.toList()
     private var musicStarted = false
@@ -40,25 +35,39 @@ class MainMenuFragment : Fragment(), OnCompletionListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.init()
-        startRandomMusic()
-        mediaPlayer.start()
+        /* ミュートボタン押下 */
+        _binding.fabMute.setOnClickListener{ viewModel.toggleMute() }
+        /* Jukebox初期化 */
+        viewModel.setJukebox(Jukebox(requireActivity()))
+        binding.txtSongName.text = viewModel.getNowSongName()
+        viewModel.setVolume(50f)
+        viewModel.playSong()
+
         _binding.btnEasy.setOnClickListener{ setLevel(0) }
         _binding.btnNormal.setOnClickListener{ setLevel(1) }
         _binding.btnHard.setOnClickListener{ setLevel(2) }
-        _binding.fabMute.setOnClickListener{ viewModel.toggleMute() }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.mute.collect {
-                    if(it) {
-                        _binding.fabMute.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.volume_on_48))
-                        mediaPlayer.setVolume(0f, 0f)
-                    }
-                    else {
-                        _binding.fabMute.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.volume_off_48))
-                        mediaPlayer.setVolume(viewModel.getVolume(), viewModel.getVolume())
+                /* ミュートボタン押下するので、viewModel.muteを監視 */
+                launch {
+                    viewModel.mute.collect {
+                        if(it) {
+                            _binding.fabMute.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.volume_on_48))
+//                            mediaPlayer.setVolume(0f, 0f)
+                        }
+                        else {
+                            _binding.fabMute.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.volume_off_48))
+//                            mediaPlayer.setVolume(viewModel.getVolume(), viewModel.getVolume())
+                        }
                     }
                 }
+//                /* 曲名Text押下 */
+//                launch {
+//                    viewModel.songidx.collect {
+//                        Jukebox.playNext()
+//                    }
+//                }
             }
         }
 
@@ -69,74 +78,34 @@ class MainMenuFragment : Fragment(), OnCompletionListener {
     }
 
     fun pauseSound() {
-        mediaPlayer.pause()
+//        mediaPlayer.pause()
     }
 
     fun resumeSound() {
-        mediaPlayer.start()
-        mediaPlayer.setOnCompletionListener(this)
+//        mediaPlayer.start()
     }
 
     fun changeVolume(vol: Int) {
         val fvol = viewModel.setVolume(vol.toFloat())
-        mediaPlayer.setVolume(fvol, fvol)
+//        mediaPlayer.setVolume(fvol, fvol)
     }
 
     fun setDefault() {
         viewModel.init()
-        this.mute()
-        mediaPlayer.setVolume(50f, 50f)
     }
 
     private fun mute() {
         if (viewModel.isMute()) {
             binding.fabMute.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.volume_off_48))
-            mediaPlayer.setVolume(0f, 0f)
+//            mediaPlayer.setVolume(0f, 0f)
         } else {
             binding.fabMute.setImageDrawable( ContextCompat.getDrawable( requireContext(), R.drawable.volume_on_48))
-            mediaPlayer.setVolume(viewModel.getVolume(), viewModel.getVolume())
+//            mediaPlayer.setVolume(viewModel.getVolume(), viewModel.getVolume())
         }
     }
 
     fun isMute(): Boolean {
         return false
-    }
-
-    fun startRandomMusic() {
-        if (musicStarted) {
-            binding.txtSongName.text = musicList[nowPlaying].name
-        } else {
-            val max = musicList.size
-            val random = Random()
-            this.nowPlaying = random.nextInt(max)
-            this.mediaPlayer = MediaPlayer.create(activity, musicList[nowPlaying].id)
-            binding.txtSongName.text = musicList[nowPlaying].name
-            mediaPlayer.start()
-            if (viewModel.isMute()) {
-                mediaPlayer.setVolume(0f, 0f)
-            } else {
-                mediaPlayer.setVolume(viewModel.getVolume(), viewModel.getVolume())
-            }
-            this.musicStarted = true
-        }
-        mediaPlayer.setOnCompletionListener(this)
-    }
-
-    override fun onCompletion(mediaPlayer: MediaPlayer) {
-        if (nowPlaying + 1 > musicList.size - 1) {
-            nowPlaying = 0
-        } else {
-            nowPlaying++
-        }
-        this.mediaPlayer = MediaPlayer.create(activity, musicList[nowPlaying].id)
-        binding.txtSongName.text = musicList[nowPlaying].name
-        if (viewModel.isMute()) {
-            this.mediaPlayer!!.setVolume(0f, 0f)
-        } else {
-            this.mediaPlayer!!.setVolume(viewModel.getVolume(), viewModel.getVolume())
-        }
-        this.mediaPlayer!!.setOnCompletionListener(this)
-        this.mediaPlayer!!.start()
     }
 
     private fun setLevel(level: Int) {
