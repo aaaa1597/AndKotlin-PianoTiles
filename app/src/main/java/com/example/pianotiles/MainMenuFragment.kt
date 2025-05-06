@@ -60,6 +60,14 @@ class MainMenuFragment : Fragment() {
         _binding.btnNormal.setOnClickListener{ viewModel.setLevel(GameLevel.normal) }
         _binding.btnHard.setOnClickListener{ viewModel.setLevel(GameLevel.hard) }
 
+        /* ゲーム開始ボタン押下 */
+        _binding.btnStart.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .addToBackStack("MainMenuFragment")
+                .replace(R.id.fragment_container, GameplayFragment.newInstance())
+                .commit()
+        }
+
         /* 一時停止確認用 */
         _binding.aaa.setOnClickListener{
             if ((it as TextView).text == "再生中") {
