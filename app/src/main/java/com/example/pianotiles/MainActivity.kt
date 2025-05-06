@@ -35,18 +35,6 @@ class MainActivity : AppCompatActivity() {
         mainModelView.resumeSong()
     }
 
-//    fun changeVolume(vol: Int)
-//        = mainMenuFragment.changeVolume(vol)
-
-    fun setDefault() {
-//        mainMenuFragment.setDefault()
-    }
-
-    fun setLevel(level: Int) {
-//        this.gameplayFragment.setLevel(level)
-//        this.pauseFragment.setLevel(level)
-    }
-
     fun setGamePlayToLoseState() {
 //        this.gameplayFragment.setLose()
     }
@@ -90,15 +78,5 @@ class MainActivity : AppCompatActivity() {
 
     fun resume() {
 //        this.changePage(7)
-    }
-
-    fun getVolume(): Int {
-//        return this.settingFragment.getVolume()
-        return 10
-    }
-
-    fun muteSoundPool(): Boolean {
-//        return mainMenuFragment.isMute()
-        return false
     }
 }

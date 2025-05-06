@@ -1,6 +1,5 @@
 package com.example.pianotiles
 
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,7 +16,6 @@ class SettingFragment : Fragment() {
     }
 
     private lateinit var _binding: FragmentSettingBinding
-    private val viewModel: SettingViewModel by viewModels()
     private lateinit var mainViewModel: MainMenuViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
