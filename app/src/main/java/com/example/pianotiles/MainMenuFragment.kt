@@ -29,6 +29,8 @@ class MainMenuFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[MainMenuViewModel::class.java]
+        viewModel.setJukebox(Jukebox(requireActivity()))
+        viewModel.playSong()
     }
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -48,10 +50,7 @@ class MainMenuFragment : Fragment() {
             .commit()
         }
         /* Jukebox初期化 */
-        viewModel.setJukebox(Jukebox(requireActivity()))
         _binding.txtSongName.text = viewModel.getNowSongName()
-        viewModel.setVolume(1f)
-        viewModel.playSong()
 
         /* 曲選択 */
         _binding.txtSongName.setOnClickListener { viewModel.nextSong() }
