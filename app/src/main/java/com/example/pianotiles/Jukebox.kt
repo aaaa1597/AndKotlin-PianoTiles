@@ -30,11 +30,20 @@ class Jukebox(activity: Activity) {
         AaaMusicPlayer.create(activity, R.raw.we_wish_you_merry_christmas, "Merry Christmas").apply { _mediaPlayser.setOnCompletionListener { it.start() } }
     )
     /* 関数 */
-    fun play(idx: Int) { _musicPlayers[idx]._mediaPlayser.start()}
-    fun stop(idx: Int) { _musicPlayers[idx]._mediaPlayser.apply { stop(); prepare() } }
-    fun nowSongName(idx: Int): String = _musicPlayers.get(idx)._name
-    fun setVolume(idx: Int, volume: Float) {
-        _musicPlayers.get(idx)._mediaPlayser.setVolume(volume, volume)
-    }
-    fun numofSong(): Int = _musicPlayers.size
+    fun play(idx: Int, volume: Float)
+        = _musicPlayers[idx]._mediaPlayser.apply { setVolume(volume, volume); start() }
+    fun stop(idx: Int)
+        = _musicPlayers[idx]._mediaPlayser.apply { stop(); prepare() }
+    fun pause(idx: Int)
+        = _musicPlayers[idx]._mediaPlayser.pause()
+    fun resume(idx: Int)
+        = _musicPlayers[idx]._mediaPlayser.start()
+    fun nowSongName(idx: Int): String
+        = _musicPlayers[idx]._name
+    fun setVolume(idx: Int, volume: Float)
+        = _musicPlayers[idx]._mediaPlayser.setVolume(volume, volume)
+    fun numofSong(): Int
+        = _musicPlayers.size
+    fun init()
+        = play(0, 1f)
 }

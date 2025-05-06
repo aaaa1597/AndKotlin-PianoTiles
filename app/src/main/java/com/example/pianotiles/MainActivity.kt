@@ -5,10 +5,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModelProvider
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var mainModelView: MainMenuViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        mainModelView = ViewModelProvider(this)[MainMenuViewModel::class.java]
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, MainMenuFragment.newInstance())
             .commit()
@@ -26,14 +27,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-//        mainMenuFragment.pauseSound()
+        mainModelView.pauseSong()
     }
 
     override fun onResume() {
         super.onResume()
-//        if (fcurrent === mainMenuFragment/* || fcurrent === settingFragment*/) {
-//            mainMenuFragment.resumeSound()
-//        }
+        mainModelView.resumeSong()
     }
 
 //    fun changeVolume(vol: Int)

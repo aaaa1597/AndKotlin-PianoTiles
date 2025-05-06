@@ -100,4 +100,14 @@
         app:layout_constraintLeft_toLeftOf="@id/btn_easy"
         app:layout_constraintRight_toRightOf="@id/btn_hard"/>
 
+    <Button
+        android:id="@+id/aaa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="再生中"
+        android:textStyle="bold"
+        android:textColor="@color/gray"
+        app:layout_constraintTop_toBottomOf="@id/btn_start"
+        app:layout_constraintLeft_toLeftOf="@id/btn_easy"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,11 +1,14 @@
 package com.example.pianotiles
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -21,7 +24,6 @@ class MainMenuFragment : Fragment() {
     }
 
     private lateinit var _binding: FragmentMainMenuBinding
-    private val binding get() = _binding
     private lateinit var viewModel: MainMenuViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,20 +33,23 @@ class MainMenuFragment : Fragment() {
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentMainMenuBinding.inflate(inflater, container, false)
-        return binding.root
+        return _binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         /* ミュートボタン押下 */
         _binding.fabMute.setOnClickListener{ viewModel.toggleMute() }
-        /* 設定ボタン押下 */
+        /* 設定ボタン押下 -> 設定画面へ */
         _binding.fabSettings.setOnClickListener {
-
+            parentFragmentManager.beginTransaction()
+            .addToBackStack(null)
+            .replace(R.id.fragment_container, SettingFragment.newInstance())
+            .commit()
         }
         /* Jukebox初期化 */
         viewModel.setJukebox(Jukebox(requireActivity()))
-        binding.txtSongName.text = viewModel.getNowSongName()
+        _binding.txtSongName.text = viewModel.getNowSongName()
         viewModel.setVolume(1f)
         viewModel.playSong()
 
@@ -55,6 +60,18 @@ class MainMenuFragment : Fragment() {
         _binding.btnEasy.setOnClickListener{ viewModel.setLevel(GameLevel.easy) }
         _binding.btnNormal.setOnClickListener{ viewModel.setLevel(GameLevel.normal) }
         _binding.btnHard.setOnClickListener{ viewModel.setLevel(GameLevel.hard) }
+
+        /* 一時停止確認用 */
+        _binding.aaa.setOnClickListener{
+            if ((it as TextView).text == "再生中") {
+                it.text = "停止"
+                viewModel.pauseSong()
+            }
+            else {
+                it.text = "再生中"
+                viewModel.resumeSong()
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
