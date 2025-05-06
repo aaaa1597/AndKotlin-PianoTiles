@@ -9,7 +9,6 @@ class MainMenuViewModel : ViewModel() {
     /* ミュート設定 */
     private val _mute: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val mute = _mute.asStateFlow()
-    fun isMute(): Boolean = mute.value
     fun toggleMute() {
         _mute.value = !_mute.value
         if(_mute.value)
