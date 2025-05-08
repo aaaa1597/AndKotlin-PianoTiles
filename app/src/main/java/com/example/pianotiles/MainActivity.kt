@@ -1,5 +1,8 @@
 package com.example.pianotiles
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +22,9 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        /* 縦画面固定 */
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+
         mainModelView = ViewModelProvider(this)[MainMenuViewModel::class.java]
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, MainMenuFragment.newInstance())
@@ -33,50 +39,5 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         mainModelView.resumeSong()
-    }
-
-    fun setGamePlayToLoseState() {
-//        this.gameplayFragment.setLose()
-    }
-
-    fun setScore(score: Int, level: Int) {
-//        this.gameOverFragment = GameOverFragment()
-//        this.highScoreFragment = HighScoreFragment()
-//        if (level == 0) {
-//            this.gameOverFragment.setScore(score, level)
-//            if (score > sharedPreferencesHighScore.getEasy()) {
-//                this.sharedPreferencesHighScore.saveEasy(score)
-//                this.highScoreFragment.setScore(score, level)
-//                this.changePage(6)
-//            } else {
-//                this.changePage(5)
-//            }
-//        } else if (level == 1) {
-//            this.gameOverFragment.setScore(score, level)
-//            if (score > sharedPreferencesHighScore.getMed()) {
-//                this.sharedPreferencesHighScore.saveMed(score)
-//                this.highScoreFragment.setScore(score, level)
-//                this.changePage(6)
-//            } else {
-//                this.changePage(5)
-//            }
-//        } else if (level == 2) {
-//            this.gameOverFragment.setScore(score, level)
-//            if (score > sharedPreferencesHighScore.getHard()) {
-//                this.sharedPreferencesHighScore.saveHard(score)
-//                this.highScoreFragment.setScore(score, level)
-//                this.changePage(6)
-//            } else {
-//                this.changePage(5)
-//            }
-//        }
-    }
-
-    fun setPause(pause: Boolean) {
-//        this.gameplayFragment.setPause(pause)
-    }
-
-    fun resume() {
-//        this.changePage(7)
     }
 }

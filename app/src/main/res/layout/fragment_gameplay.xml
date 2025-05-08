@@ -6,6 +6,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".GameplayFragment">
 
+    <com.example.pianotiles.RuledlineView
+        android:id="@+id/rlv_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white" />
+
     <Button
         android:id="@+id/btn_pause"
         android:layout_width="50dp"
