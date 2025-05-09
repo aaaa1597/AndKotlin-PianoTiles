@@ -3,33 +3,33 @@ package com.example.pianotiles
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.pianotiles.databinding.FragmentGameplayBinding
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class GameplayFragment(private val _level: GameLevel) : Fragment() {
+class GameplayFragment(
+    private val _level: GameLevel,
+    private val _volume: Float) : Fragment() {
 
     companion object {
-        fun newInstance(level: GameLevel) = GameplayFragment(level)
+        fun newInstance(level: GameLevel, volume: Float) = GameplayFragment(level, volume)
     }
 
     private lateinit var _binding: FragmentGameplayBinding
-    private val gameViewModel: GameplayViewModel by viewModels()
+    private lateinit var gameViewModel: GameplayViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        gameViewModel = ViewModelProvider(this, GameplayViewModel.Factory(_volume)).get(GameplayViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View {
@@ -48,21 +48,21 @@ class GameplayFragment(private val _level: GameLevel) : Fragment() {
                 .replace(R.id.fragment_container, PauseFragment.newInstance())
                 .commit()
         }
-        /* 画面タッチ */
+        /* 画面タッチ -> GameOver */
         _binding.rlvBackground.setOnTouchListener(object: OnTouchListener{
             override fun onTouch(view: View, event: MotionEvent): Boolean {
                 if(event.action == MotionEvent.ACTION_DOWN) {
                     parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, GameplayFragment.newInstance(_level))
+                        /* TODO GameOver画面を作成する */
+                        .replace(R.id.fragment_container, GameplayFragment.newInstance(_level, _volume))
                         .commit()
                 }
                 return false
             }
         })
-
+        /* スコア表示 */
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                /* スコア表示 */
                 launch {
                     gameViewModel.score.collect {
                         _binding.txtScore.text = gameViewModel.score.value.toString()
@@ -83,6 +83,5 @@ class GameplayFragment(private val _level: GameLevel) : Fragment() {
                 _binding.txtCountdown.visibility = View.GONE
             }
         }.start()
-
     }
 }

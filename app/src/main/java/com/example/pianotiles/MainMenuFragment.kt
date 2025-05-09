@@ -62,7 +62,7 @@ class MainMenuFragment : Fragment() {
         _binding.btnStart.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .addToBackStack("MainMenuFragment")
-                .replace(R.id.fragment_container, GameplayFragment.newInstance(viewModel.level.value))
+                .replace(R.id.fragment_container, GameplayFragment.newInstance(viewModel.level.value, viewModel.volume.value.toFloat()))
                 .commit()
         }
 
