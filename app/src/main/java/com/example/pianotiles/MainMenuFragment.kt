@@ -1,14 +1,12 @@
 package com.example.pianotiles
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -64,7 +62,7 @@ class MainMenuFragment : Fragment() {
         _binding.btnStart.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .addToBackStack("MainMenuFragment")
-                .replace(R.id.fragment_container, GameplayFragment.newInstance())
+                .replace(R.id.fragment_container, GameplayFragment.newInstance(viewModel.level.value))
                 .commit()
         }
 

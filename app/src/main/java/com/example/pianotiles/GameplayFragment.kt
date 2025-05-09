@@ -2,6 +2,8 @@ package com.example.pianotiles
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -13,14 +15,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.pianotiles.databinding.FragmentGameplayBinding
-import com.example.pianotiles.databinding.FragmentMainMenuBinding
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class GameplayFragment : Fragment() {
+class GameplayFragment(private val _level: GameLevel) : Fragment() {
 
     companion object {
-        fun newInstance() = GameplayFragment()
+        fun newInstance(level: GameLevel) = GameplayFragment(level)
     }
 
     private lateinit var _binding: FragmentGameplayBinding
@@ -48,8 +50,13 @@ class GameplayFragment : Fragment() {
         }
         /* 画面タッチ */
         _binding.rlvBackground.setOnTouchListener(object: OnTouchListener{
-            override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
-                return true
+            override fun onTouch(view: View, event: MotionEvent): Boolean {
+                if(event.action == MotionEvent.ACTION_DOWN) {
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, GameplayFragment.newInstance(_level))
+                        .commit()
+                }
+                return false
             }
         })
 
@@ -64,6 +71,18 @@ class GameplayFragment : Fragment() {
 
             }
         }
+
+        /* ゲーム開始カウントダウン */
+        object : CountDownTimer(4000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                _binding.txtCountdown.text = (millisUntilFinished/1000).toString()
+            }
+
+            override fun onFinish() {
+                _binding.btnPause.isEnabled = true
+                _binding.txtCountdown.visibility = View.GONE
+            }
+        }.start()
 
     }
 }
