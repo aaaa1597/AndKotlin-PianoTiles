@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.media.MediaPlayer
+import android.media.MediaPlayer.OnCompletionListener
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -34,6 +35,7 @@ class  TileView: View {
             else -> Color.RED
         }
         _mediaPlayer = MediaPlayer.create(context, tile.resId)
+        _mediaPlayer.setOnCompletionListener { _mediaPlayer.release() }
     }
 
     /* onDraw */
