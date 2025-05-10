@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -16,9 +17,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.pianotiles.GameLevel.*
 import com.example.pianotiles.databinding.FragmentGameplayBinding
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
+
+val PERIODIC_TIME_EASY  = 2000f
+val PERIODIC_TIME_NORMAL= (2000*0.9).toFloat()
+val PERIODIC_TIME_HARD  = (2000*0.8).toFloat()
 
 class GameplayFragment: Fragment() {
     companion object {
@@ -34,6 +40,7 @@ class GameplayFragment: Fragment() {
     private lateinit var _binding: FragmentGameplayBinding
     private lateinit var gameViewModel: GameplayViewModel
     private lateinit var _level: GameLevel
+    private lateinit var run: Runnable      /* ゲーム処理メイン */
     private var _volume: Float = 0f
     private var _screenH: Float = 0f
 
@@ -104,11 +111,28 @@ class GameplayFragment: Fragment() {
                 Handler(Looper.getMainLooper()).post(run)
             }
         }.start()
-    }
 
-    /* ゲーム処理メイン */
-    val run: Runnable = Runnable {
-        val tileview = TileView(requireContext(), gameViewModel.tiles.removeFirst(), _screenH)
-        _binding.flyTiles.addView(tileview)
+        /* ゲーム処理メイン */
+        run = Runnable {
+            /* タイル情報取得 */
+            if(gameViewModel.tiles.isEmpty()) {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, GameclearFragment.newInstance())
+                    .commit()
+                return@Runnable
+            }
+
+            /* 鍵盤生成 */
+            val tileview = TileView(requireContext(), gameViewModel.tiles.removeFirst(), _screenH, _level)
+            _binding.flyTiles.addView(tileview)
+            /* 次の準備 */
+            val periodictime = when(_level) {
+                easy  -> (PERIODIC_TIME_EASY/4).toLong()
+                normal-> (PERIODIC_TIME_NORMAL/4).toLong()
+                hard  -> (PERIODIC_TIME_HARD/4).toLong()
+            }
+            /* 次実行 */
+            Handler(Looper.getMainLooper()).postDelayed(run, periodictime)
+        }
     }
 }

@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
+import com.example.pianotiles.GameLevel.*
 
 class  TileView: View {
     /* Viewを継承するときのお約束 */
@@ -20,14 +21,14 @@ class  TileView: View {
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
     /* 独自コンストラクタ */
-    constructor(context: Context, tile: Tile, screenH: Float) : super(context) { init(tile, screenH)}
+    constructor(context: Context, tile: Tile, screenH: Float, level: GameLevel) : super(context) { init(tile, screenH, level)}
 
     private var _bgcolor: Int = Color.BLACK
     private lateinit var _mediaPlayer:MediaPlayer
     private lateinit var _anim:ObjectAnimator
 //    private var _OnTouchCallback: OnTouchCallback? = null
     /* init */
-    private fun init(tile: Tile, screenH: Float) {
+    private fun init(tile: Tile, screenH: Float, level: GameLevel) {
         layoutParams = FrameLayout.LayoutParams(tile.width.toInt(), (tile.height*tile.rows).toInt())
         translationX = tile.width  * tile.column
         translationY = -(tile.height*tile.rows) + 200
@@ -42,7 +43,11 @@ class  TileView: View {
         _mediaPlayer.setOnCompletionListener { _mediaPlayer.release() }
 
         _anim = ObjectAnimator.ofFloat(this, "translationY", (screenH*0.995).toFloat()).apply {
-            duration = 2000
+            duration = when(level) {
+                easy  -> PERIODIC_TIME_EASY.toLong()
+                normal-> PERIODIC_TIME_NORMAL.toLong()
+                hard  -> PERIODIC_TIME_HARD.toLong()
+            }
             interpolator = LinearInterpolator()
             start()
             addListener(object: Animator.AnimatorListener {
