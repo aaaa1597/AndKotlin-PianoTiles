@@ -60,6 +60,7 @@ class MainMenuFragment : Fragment() {
 
         /* ゲーム開始ボタン押下 */
         _binding.btnStart.setOnClickListener {
+            viewModel.stopSong()
             parentFragmentManager.beginTransaction()
                 .addToBackStack("MainMenuFragment")
                 .replace(R.id.fragment_container, GameplayFragment.newInstance(viewModel.level.value, viewModel.volume.value.toFloat()))
