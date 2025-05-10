@@ -95,10 +95,6 @@ class GameplayFragment(
         }.start()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     /* ゲーム処理メイン */
     val run: Runnable = Runnable {
         val tile = gameViewModel.tiles.removeFirst()
