@@ -3,6 +3,7 @@ package com.example.pianotiles
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.media.MediaPlayer
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -18,16 +19,13 @@ class  TileView: View {
     constructor(context: Context, tile: Tile) : super(context) {
         init(tile)
     }
-
     private var _color: Int = Color.BLACK
-    private var _soundId: Int = 0
+    private lateinit var _mediaPlayer:MediaPlayer
     /* init */
     private fun init(tile: Tile) {
         layoutParams = FrameLayout.LayoutParams(tile.width.toInt(), (tile.height*tile.rows).toInt())
-//        translationX = tile.width  * tile.column
-        translationX = 100f
-//        translationY = -tile.height* tile.rows
-        translationY = 100f
+        translationX = tile.width  * tile.column
+        translationY = -tile.height* tile.rows + 200
         _color = when(tile.column) {
             1 -> Color.BLACK
             2 -> Color.YELLOW
@@ -35,7 +33,7 @@ class  TileView: View {
             4 -> Color.BLUE
             else -> Color.RED
         }
-        _soundId = tile.soundId
+        _mediaPlayer = MediaPlayer.create(context, tile.resId)
     }
 
     /* onDraw */
@@ -53,7 +51,7 @@ class  TileView: View {
             /* 自身を消す */
             (this.parent as ViewGroup).removeView(this)
             /* 音を鳴らす */
-            /* TODO: 音を鳴らす */
+            _mediaPlayer.start()
             return true
         }
         return performClick()
