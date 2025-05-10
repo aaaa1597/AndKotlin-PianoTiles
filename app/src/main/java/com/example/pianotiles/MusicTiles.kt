@@ -2,7 +2,7 @@ package com.example.pianotiles
 
 import java.util.Random
 
-class Tile(column: Int, width: Float, height: Float, rows: Int, soundId: Int)
+class Tile(val column: Int, val width: Float, val height: Float, val rows: Int, val soundId: Int)
 
 class MusicTiles {
     companion object {
