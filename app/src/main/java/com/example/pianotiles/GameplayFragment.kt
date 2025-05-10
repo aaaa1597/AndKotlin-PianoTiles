@@ -30,6 +30,7 @@ class GameplayFragment(
 
     private lateinit var _binding: FragmentGameplayBinding
     private lateinit var gameViewModel: GameplayViewModel
+    private var _screenH: Float = 0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +79,7 @@ class GameplayFragment(
             override fun onGlobalLayout() {
                 view.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 gameViewModel.getReady(_level, view.width, view.height)
+                _screenH = view.height.toFloat()
             }
         })
         /* ゲーム開始カウントダウン */
@@ -97,7 +99,7 @@ class GameplayFragment(
 
     /* ゲーム処理メイン */
     val run: Runnable = Runnable {
-        val tile = gameViewModel.tiles.removeFirst()
-        _binding.flyTiles.addView(TileView(requireContext(), tile))
+        val tileview = TileView(requireContext(), gameViewModel.tiles.removeFirst(), _screenH)
+        _binding.flyTiles.addView(tileview)
     }
 }

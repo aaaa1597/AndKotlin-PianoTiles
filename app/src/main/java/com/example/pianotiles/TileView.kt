@@ -1,14 +1,17 @@
 package com.example.pianotiles
 
+import android.animation.Animator
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.media.MediaPlayer
-import android.media.MediaPlayer.OnCompletionListener
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 
 class  TileView: View {
@@ -17,17 +20,17 @@ class  TileView: View {
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
     /* 独自コンストラクタ */
-    constructor(context: Context, tile: Tile) : super(context) {
-        init(tile)
-    }
-    private var _color: Int = Color.BLACK
+    constructor(context: Context, tile: Tile, screenH: Float) : super(context) { init(tile, screenH)}
+
+    private var _bgcolor: Int = Color.BLACK
     private lateinit var _mediaPlayer:MediaPlayer
+    private lateinit var _anim:ObjectAnimator
     /* init */
-    private fun init(tile: Tile) {
+    private fun init(tile: Tile, screenH: Float) {
         layoutParams = FrameLayout.LayoutParams(tile.width.toInt(), (tile.height*tile.rows).toInt())
         translationX = tile.width  * tile.column
-        translationY = -tile.height* tile.rows + 200
-        _color = when(tile.column) {
+        translationY = -(tile.height*tile.rows) + 200
+        _bgcolor = when(tile.rows) {
             1 -> Color.BLACK
             2 -> Color.YELLOW
             3 -> Color.GREEN
@@ -36,12 +39,28 @@ class  TileView: View {
         }
         _mediaPlayer = MediaPlayer.create(context, tile.resId)
         _mediaPlayer.setOnCompletionListener { _mediaPlayer.release() }
+
+        _anim = ObjectAnimator.ofFloat(this, "translationY", (screenH*0.995).toFloat()).apply {
+            duration = 2000
+            interpolator = LinearInterpolator()
+            start()
+            addListener(object: Animator.AnimatorListener {
+                override fun onAnimationEnd(animator: Animator) {
+                    removeAllListeners()
+                }
+                override fun onAnimationStart(animator: Animator) { }
+                override fun onAnimationCancel(animator: Animator) { }
+                override fun onAnimationRepeat(animator: Animator) { }
+            })
+        }
+//        _anim.pause()
+//        _anim.resume()
     }
 
     /* onDraw */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawColor(_color)
+        canvas.drawColor(_bgcolor)
     }
 
     /* ワーニング対応 onTouchEvent()をoverrideしたら、performClick()を呼ばんといかんらしい　*/
