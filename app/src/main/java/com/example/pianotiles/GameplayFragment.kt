@@ -90,6 +90,15 @@ class GameplayFragment: Fragment() {
                 }
             }
         }
+        /* ゲームクリア後の再スタートボタン */
+        _binding.btnRestart2.setOnClickListener {
+            _binding.txtCongratulations.visibility = View.GONE
+            _binding.btnRestart2.visibility = View.GONE
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, MainMenuFragment.newInstance())
+                .commit()
+        }
+
         /* ゲーム開始準備(onViewCreatedではw,hがとれないので確定してから実行する) */
         view.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
@@ -116,9 +125,8 @@ class GameplayFragment: Fragment() {
         run = Runnable {
             /* タイル情報取得 */
             if(gameViewModel.tiles.isEmpty()) {
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, GameclearFragment.newInstance())
-                    .commit()
+                _binding.txtCongratulations.visibility = View.VISIBLE
+                _binding.btnRestart2.visibility = View.VISIBLE
                 return@Runnable
             }
 
