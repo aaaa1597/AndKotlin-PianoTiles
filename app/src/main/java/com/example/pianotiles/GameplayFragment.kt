@@ -20,21 +20,30 @@ import com.example.pianotiles.databinding.FragmentGameplayBinding
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
 
-class GameplayFragment(
-    private val _level: GameLevel,
-    private val _volume: Float) : Fragment() {
-
+class GameplayFragment: Fragment() {
     companion object {
-        fun newInstance(level: GameLevel, volume: Float) = GameplayFragment(level, volume)
+        fun newInstance(level: GameLevel, volume: Float)
+            = GameplayFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable("LEVEL", level)
+                    putFloat("VOLUME", volume)
+                }
+            }
     }
 
     private lateinit var _binding: FragmentGameplayBinding
     private lateinit var gameViewModel: GameplayViewModel
+    private lateinit var _level: GameLevel
+    private var _volume: Float = 0f
     private var _screenH: Float = 0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         gameViewModel = ViewModelProvider(this, GameplayViewModel.Factory(_volume, requireActivity().application)).get(GameplayViewModel::class.java)
+        arguments?.let {
+            _level = it.getSerializable("LEVEL", GameLevel::class.java)!!
+            _volume= it.getFloat("VOLUME")
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View {

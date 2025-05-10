@@ -25,6 +25,7 @@ class  TileView: View {
     private var _bgcolor: Int = Color.BLACK
     private lateinit var _mediaPlayer:MediaPlayer
     private lateinit var _anim:ObjectAnimator
+//    private var _OnTouchCallback: OnTouchCallback? = null
     /* init */
     private fun init(tile: Tile, screenH: Float) {
         layoutParams = FrameLayout.LayoutParams(tile.width.toInt(), (tile.height*tile.rows).toInt())
@@ -73,8 +74,18 @@ class  TileView: View {
             (this.parent as ViewGroup).removeView(this)
             /* 音を鳴らす */
             _mediaPlayer.start()
+//            /* Callbackコール */
+//            _OnTouchCallback?.onTouchEvent(event)
             return true
         }
         return performClick()
     }
+
+//    fun setOnTouchCallback(onTouchCallback: OnTouchCallback) {
+//        _OnTouchCallback = onTouchCallback
+//    }
+//
+//    interface OnTouchCallback {
+//        fun onTouchEvent(event: MotionEvent): Boolean
+//    }
 }
