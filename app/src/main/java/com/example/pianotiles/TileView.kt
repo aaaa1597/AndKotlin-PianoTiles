@@ -7,7 +7,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +25,7 @@ class  TileView: View {
     private var _bgcolor: Int = Color.BLACK
     private lateinit var _mediaPlayer:MediaPlayer
     private lateinit var _anim:ObjectAnimator
-//    private var _OnTouchCallback: OnTouchCallback? = null
+    private var _OnReachEdgeCallback: OnReachEdgeCallback? = null
     /* init */
     private fun init(tile: Tile, screenH: Float, level: GameLevel) {
         layoutParams = FrameLayout.LayoutParams(tile.width.toInt(), (tile.height*tile.rows).toInt())
@@ -53,6 +52,8 @@ class  TileView: View {
             addListener(object: Animator.AnimatorListener {
                 override fun onAnimationEnd(animator: Animator) {
                     removeAllListeners()
+                    /* Callbackコール */
+                    _OnReachEdgeCallback?.onReachEdge()
                 }
                 override fun onAnimationStart(animator: Animator) { }
                 override fun onAnimationCancel(animator: Animator) { }
@@ -79,18 +80,16 @@ class  TileView: View {
             (this.parent as ViewGroup).removeView(this)
             /* 音を鳴らす */
             _mediaPlayer.start()
-//            /* Callbackコール */
-//            _OnTouchCallback?.onTouchEvent(event)
             return true
         }
         return performClick()
     }
 
-//    fun setOnTouchCallback(onTouchCallback: OnTouchCallback) {
-//        _OnTouchCallback = onTouchCallback
-//    }
-//
-//    interface OnTouchCallback {
-//        fun onTouchEvent(event: MotionEvent): Boolean
-//    }
+    fun setOnReachEdgeCallback(onReachEdgeCallback: OnReachEdgeCallback) {
+        _OnReachEdgeCallback = onReachEdgeCallback
+    }
+
+    interface OnReachEdgeCallback {
+        fun onReachEdge()
+    }
 }

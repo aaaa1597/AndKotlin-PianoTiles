@@ -92,7 +92,7 @@ class GameplayFragment: Fragment() {
         }
         /* ゲームクリア後の再スタートボタン */
         _binding.btnRestart2.setOnClickListener {
-            _binding.txtCongratulations.visibility = View.GONE
+            _binding.txtEndmessage.visibility = View.GONE
             _binding.btnRestart2.visibility = View.GONE
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, MainMenuFragment.newInstance())
@@ -125,13 +125,29 @@ class GameplayFragment: Fragment() {
         run = Runnable {
             /* タイル情報取得 */
             if(gameViewModel.tiles.isEmpty()) {
-                _binding.txtCongratulations.visibility = View.VISIBLE
+                _binding.txtEndmessage.visibility = View.VISIBLE
+                _binding.txtEndmessage.text = getString(R.string.congratulations_gaeme_cleared)
                 _binding.btnRestart2.visibility = View.VISIBLE
                 return@Runnable
             }
 
             /* 鍵盤生成 */
             val tileview = TileView(requireContext(), gameViewModel.tiles.removeFirst(), _screenH, _level)
+            /* タイルが端についちまった検知 */
+            tileview.setOnReachEdgeCallback(object : TileView.OnReachEdgeCallback {
+                override fun onReachEdge() {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                            launch {
+                                _binding.txtEndmessage.visibility = View.VISIBLE
+                                _binding.txtEndmessage.text = getString(R.string.gameover)
+                                _binding.btnRestart2.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+                }
+            })
+
             _binding.flyTiles.addView(tileview)
             /* 次の準備 */
             val periodictime = when(_level) {
