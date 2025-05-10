@@ -1,15 +1,11 @@
 package com.example.pianotiles
 
 import android.app.Application
-import android.media.AudioAttributes
-import android.media.SoundPool
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-
-enum class SoundId { Do1,Re2,Mi3,Fa4,So5,La6,Si7,Do1Octave,Setengah }
 
 class GameplayViewModel(vol: Float, app: Application) : AndroidViewModel(app) {
     /* Factoryメソッド */
