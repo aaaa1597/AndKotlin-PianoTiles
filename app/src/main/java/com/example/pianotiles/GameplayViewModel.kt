@@ -30,8 +30,8 @@ class GameplayViewModel(vol: Float, app: Application) : AndroidViewModel(app) {
     private lateinit var soundIdMap: Map<SoundId, Int>
     /* SoundPool */
     private lateinit var soundPool: SoundPool
-    /* TileList */
-    private var tiles: ArrayList<Tile> = arrayListOf()
+    /* TileQueue */
+    var tiles: ArrayDeque<Tile> = ArrayDeque()
 
     fun init() {
         _score.value = 0

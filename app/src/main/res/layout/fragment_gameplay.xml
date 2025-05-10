@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,10 +8,16 @@
     tools:context=".GameplayFragment">
 
     <com.example.pianotiles.RuledlineView
-        android:id="@+id/rlv_background"
+        android:id="@+id/rlv_ruledline"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white" />
+
+    <FrameLayout
+        android:id="@+id/fly_tiles"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#44ff6644"/>
 
     <Button
         android:id="@+id/btn_pause"
@@ -37,35 +44,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/border_view"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/border_view"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/border_view"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/border_view"/>
-    </LinearLayout>
 
     <TextView
         android:id="@+id/txt_countdown"

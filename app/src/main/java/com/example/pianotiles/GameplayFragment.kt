@@ -3,17 +3,21 @@ package com.example.pianotiles
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.pianotiles.databinding.FragmentGameplayBinding
+import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
 
 class GameplayFragment(
@@ -48,7 +52,7 @@ class GameplayFragment(
                 .commit()
         }
         /* 画面ミスタッチ -> GameOver */
-        _binding.rlvBackground.setOnTouchListener(object: OnTouchListener{
+        _binding.rlvRuledline.setOnTouchListener(object: OnTouchListener{
             override fun onTouch(view: View, event: MotionEvent): Boolean {
                 if(event.action == MotionEvent.ACTION_DOWN) {
                     parentFragmentManager.beginTransaction()
@@ -69,9 +73,13 @@ class GameplayFragment(
                 }
             }
         }
-        /* Tiles生成 */
-        gameViewModel.getReady(_level, view.width, view.height)
-
+        /* ゲーム開始準備(onViewCreatedではw,hがとれないので確定してから実行する) */
+        view.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                view.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                gameViewModel.getReady(_level, view.width, view.height)
+            }
+        })
         /* ゲーム開始カウントダウン */
         object : CountDownTimer(4000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -81,6 +89,8 @@ class GameplayFragment(
             override fun onFinish() {
                 _binding.btnPause.isEnabled = true
                 _binding.txtCountdown.visibility = View.GONE
+                /* ゲーム開始 */
+                Handler(Looper.getMainLooper()).post(run)
             }
         }.start()
     }
@@ -88,5 +98,11 @@ class GameplayFragment(
     override fun onDestroy() {
         super.onDestroy()
         gameViewModel.destroy()
+    }
+
+    /* ゲーム処理メイン */
+    val run: Runnable = Runnable {
+        val tile = gameViewModel.tiles.removeFirst()
+        _binding.flyTiles.addView(TileView(requireContext(), tile))
     }
 }

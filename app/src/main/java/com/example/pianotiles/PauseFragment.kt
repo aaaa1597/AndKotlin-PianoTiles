@@ -25,8 +25,6 @@ class PauseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         /* resume押下 */
         view.findViewById<Button>(R.id.btn_resume).setOnClickListener {
-            /* pause解除 */
-            gameViewModel.setPause(false)
             /* このFragmentを消去 */
             parentFragmentManager.beginTransaction().remove(this).commit()
             /* GameplayFragment画面に戻る */

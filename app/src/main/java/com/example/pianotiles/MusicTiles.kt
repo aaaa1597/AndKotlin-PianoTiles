@@ -21,7 +21,7 @@ class MusicTiles {
             Music(R.raw.we_wish_you_merry_christmas, "Merry Christmas")
         )
 
-        fun create(level: GameLevel, screenW: Int, screenH: Int): ArrayList<Tile> {
+        fun create(level: GameLevel, screenW: Int, screenH: Int): ArrayDeque<Tile> {
             return when(level) {
                 GameLevel.easy  -> getKartini(   screenW, 4, screenH, 4)
                 GameLevel.normal-> getLittleStar(screenW, 5, screenH, 4)
@@ -29,10 +29,10 @@ class MusicTiles {
             }
         }
 
-        private fun getKartini(screenW: Int, divW: Int, screenH: Int, divH: Int): ArrayList<Tile> {
+        private fun getKartini(screenW: Int, divW: Int, screenH: Int, divH: Int): ArrayDeque<Tile> {
             val width = screenW.toFloat() / divW.toFloat()
             val height= screenH.toFloat() / divH.toFloat()
-            return arrayListOf(
+            return ArrayDeque(listOf(
                 Tile(generateRandomColumn(divW), width, height, 2, 1),
                 Tile(generateRandomColumn(divW), width, height, 1, 2),
                 Tile(generateRandomColumn(divW), width, height, 1, 3),
@@ -86,13 +86,13 @@ class MusicTiles {
                 Tile(generateRandomColumn(divW), width, height, 1, 3),
                 Tile(generateRandomColumn(divW), width, height, 1, 2),
                 Tile(generateRandomColumn(divW), width, height, 4, 1),
-            )
+            ))
         }
 
-        private fun getLittleStar(screenW: Int, divW: Int, screenH: Int, divH: Int): ArrayList<Tile> {
+        private fun getLittleStar(screenW: Int, divW: Int, screenH: Int, divH: Int): ArrayDeque<Tile> {
             val width = screenW.toFloat() / divW.toFloat()
             val height= screenH.toFloat() / divH.toFloat()
-            return arrayListOf(
+            return ArrayDeque(listOf(
                 Tile(generateRandomColumn(divW), width, height,1, 1),
                 Tile(generateRandomColumn(divW), width, height,1, 1),
                 Tile(generateRandomColumn(divW), width, height,1, 5),
@@ -135,13 +135,13 @@ class MusicTiles {
                 Tile(generateRandomColumn(divW), width, height,1, 2),
                 Tile(generateRandomColumn(divW), width, height,1, 2),
                 Tile(generateRandomColumn(divW), width, height,1, 1),
-           )
+           ))
         }
 
-        private fun getMinuet(screenW: Int, divW: Int, screenH: Int, divH: Int): ArrayList<Tile> {
+        private fun getMinuet(screenW: Int, divW: Int, screenH: Int, divH: Int): ArrayDeque<Tile> {
             val width = screenW.toFloat() / divW.toFloat()
             val height= screenH.toFloat() / divH.toFloat()
-            return arrayListOf(
+            return ArrayDeque(listOf(
 		        Tile(generateRandomColumn(divW), width, height, 1, 5),
 		        Tile(generateRandomColumn(divW), width, height, 1, 1),
 		        Tile(generateRandomColumn(divW), width, height, 1, 2),
@@ -174,7 +174,7 @@ class MusicTiles {
 		        Tile(generateRandomColumn(divW), width, height, 1, 1),
 		        Tile(generateRandomColumn(divW), width, height, 1, 2),
 		        Tile(generateRandomColumn(divW), width, height, 1, 1),
-            )
+            ))
         }
 
         private fun generateRandomColumn(upperBound: Int): Int {
