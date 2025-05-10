@@ -97,7 +97,6 @@ class GameplayFragment(
 
     override fun onDestroy() {
         super.onDestroy()
-        gameViewModel.destroy()
     }
 
     /* ゲーム処理メイン */
