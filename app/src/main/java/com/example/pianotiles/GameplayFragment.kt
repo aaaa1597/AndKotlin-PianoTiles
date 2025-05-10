@@ -29,7 +29,7 @@ class GameplayFragment(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        gameViewModel = ViewModelProvider(this, GameplayViewModel.Factory(_volume)).get(GameplayViewModel::class.java)
+        gameViewModel = ViewModelProvider(this, GameplayViewModel.Factory(_volume, requireActivity().application)).get(GameplayViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View {
@@ -42,13 +42,12 @@ class GameplayFragment(
         super.onViewCreated(view, savedInstanceState)
         /* pauseボタン押下 */
         _binding.btnPause.setOnClickListener {
-            gameViewModel.setPause(true)
             parentFragmentManager.beginTransaction()
                 .addToBackStack("GameplayFragment")
                 .replace(R.id.fragment_container, PauseFragment.newInstance())
                 .commit()
         }
-        /* 画面タッチ -> GameOver */
+        /* 画面ミスタッチ -> GameOver */
         _binding.rlvBackground.setOnTouchListener(object: OnTouchListener{
             override fun onTouch(view: View, event: MotionEvent): Boolean {
                 if(event.action == MotionEvent.ACTION_DOWN) {
@@ -68,9 +67,10 @@ class GameplayFragment(
                         _binding.txtScore.text = gameViewModel.score.value.toString()
                     }
                 }
-
             }
         }
+        /* Tiles生成 */
+        gameViewModel.getReady(_level, view.width, view.height)
 
         /* ゲーム開始カウントダウン */
         object : CountDownTimer(4000, 1000) {
@@ -83,5 +83,10 @@ class GameplayFragment(
                 _binding.txtCountdown.visibility = View.GONE
             }
         }.start()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        gameViewModel.destroy()
     }
 }
