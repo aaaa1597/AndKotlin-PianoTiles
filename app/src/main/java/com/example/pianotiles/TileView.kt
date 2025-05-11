@@ -89,6 +89,14 @@ class  TileView: View {
         _OnReachEdgeCallback = onReachEdgeCallback
     }
 
+    fun pause() {
+        _anim.pause()
+    }
+
+    fun resume() {
+        _anim.resume()
+    }
+
     interface OnReachEdgeCallback {
         fun onReachEdge()
     }

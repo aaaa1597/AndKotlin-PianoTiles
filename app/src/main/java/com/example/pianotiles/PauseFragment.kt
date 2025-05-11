@@ -11,10 +11,14 @@ import androidx.lifecycle.ViewModelProvider
 
 class PauseFragment : Fragment() {
     private lateinit var gameViewModel: GameplayViewModel
+    private var _volume: Float = 0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        gameViewModel = ViewModelProvider(requireActivity())[GameplayViewModel::class.java]
+        arguments?.let {
+            _volume= it.getFloat("VOLUME")
+        }
+        gameViewModel = ViewModelProvider(this, GameplayViewModel.Factory(_volume, requireActivity().application)).get(GameplayViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -48,6 +52,11 @@ class PauseFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() = PauseFragment()
+        fun newInstance(volume: Float)
+            = PauseFragment().apply {
+                arguments = Bundle().apply {
+                    putFloat("VOLUME", volume)
+                }
+            }
     }
 }

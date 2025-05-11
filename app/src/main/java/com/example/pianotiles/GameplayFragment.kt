@@ -12,6 +12,7 @@ import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import androidx.core.view.allViews
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -43,6 +44,18 @@ class GameplayFragment: Fragment() {
     private lateinit var run: Runnable      /* ゲーム処理メイン */
     private var _volume: Float = 0f
     private var _screenH: Float = 0f
+    @Volatile
+    private var isPause: Boolean = false /* 中断フラグ(Gettin画面移行とかGameOverになったときとか) */
+        set(value) {
+            /* これでpostDelayした分は停止/再開する */
+            field = value
+            /* ついでに現在実行中のTileViewのアニメを停止/再開する */
+            _binding.flyTiles.allViews.forEach {
+                if(it is TileView)
+                    if(value) it.pause()
+                    else      it.resume()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,19 +76,21 @@ class GameplayFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         /* pauseボタン押下 */
         _binding.btnPause.setOnClickListener {
+            isPause = true
             parentFragmentManager.beginTransaction()
                 .addToBackStack("GameplayFragment")
-                .replace(R.id.fragment_container, PauseFragment.newInstance())
+                .replace(R.id.fragment_container, PauseFragment.newInstance(_volume))
                 .commit()
         }
         /* 画面ミスタッチ -> GameOver */
         _binding.rlvRuledline.setOnTouchListener(object: OnTouchListener{
             override fun onTouch(view: View, event: MotionEvent): Boolean {
                 if(event.action == MotionEvent.ACTION_DOWN) {
-                    parentFragmentManager.beginTransaction()
-                        /* TODO GameOver画面を作成する */
-                        .replace(R.id.fragment_container, GameplayFragment.newInstance(_level, _volume))
-                        .commit()
+                    isPause = true
+                    _binding.txtEndmessage.visibility = View.VISIBLE
+                    _binding.txtEndmessage.text = getString(R.string.gameover)
+                    _binding.btnRestart2.visibility = View.VISIBLE
+                    return true
                 }
                 return false
             }
@@ -123,7 +138,11 @@ class GameplayFragment: Fragment() {
 
         /* ゲーム処理メイン */
         run = Runnable {
-            /* タイル情報取得 */
+            /* pause中は処理しない */
+            while(isPause)
+                return@Runnable
+
+            /* タイル情報が空ならゲームクリア!! */
             if(gameViewModel.tiles.isEmpty()) {
                 _binding.txtEndmessage.visibility = View.VISIBLE
                 _binding.txtEndmessage.text = getString(R.string.congratulations_gaeme_cleared)
@@ -133,12 +152,13 @@ class GameplayFragment: Fragment() {
 
             /* 鍵盤生成 */
             val tileview = TileView(requireContext(), gameViewModel.tiles.removeFirst(), _screenH, _level)
-            /* タイルが端についちまった検知 */
+            /* タイルが端についちまった検知(タイルが端についちまったらGameover) */
             tileview.setOnReachEdgeCallback(object : TileView.OnReachEdgeCallback {
                 override fun onReachEdge() {
                     viewLifecycleOwner.lifecycleScope.launch {
                         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                             launch {
+                                isPause = true
                                 _binding.txtEndmessage.visibility = View.VISIBLE
                                 _binding.txtEndmessage.text = getString(R.string.gameover)
                                 _binding.btnRestart2.visibility = View.VISIBLE
@@ -147,7 +167,6 @@ class GameplayFragment: Fragment() {
                     }
                 }
             })
-
             _binding.flyTiles.addView(tileview)
             /* 次の準備 */
             val periodictime = when(_level) {
