@@ -18,7 +18,7 @@ class PauseFragment : Fragment() {
         arguments?.let {
             _volume= it.getFloat("VOLUME")
         }
-        gameViewModel = ViewModelProvider(this, GameplayViewModel.Factory(_volume, requireActivity().application)).get(GameplayViewModel::class.java)
+        gameViewModel = ViewModelProvider(this, GameplayViewModel.Factory(_volume, requireActivity().application))[GameplayViewModel::class.java]
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
