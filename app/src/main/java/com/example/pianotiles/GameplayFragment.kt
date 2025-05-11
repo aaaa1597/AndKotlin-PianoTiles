@@ -43,6 +43,7 @@ class GameplayFragment: Fragment() {
     private lateinit var run: Runnable      /* ゲーム処理メイン */
     private var _volume: Float = 0f
     private var _screenH: Float = 0f
+    private lateinit var _counDownTimer: CountDownTimer
     @Volatile
     private var isPause: Boolean = false /* 中断フラグ(Setting画面移行とかGameOverになったときとか) */
         set(value) {
@@ -81,6 +82,34 @@ class GameplayFragment: Fragment() {
                     _binding.fragmentPause.visibility = View.GONE
                 }
             })
+        /* pause画面でのReStartボタン押下検知のCallBack設定 */
+        _binding.fragmentPause.getFragment<PauseFragment>().setOnReStartButtonClickCallback(
+            object: PauseFragment.OnReStartButtonClickCallback{
+                override fun onReStartButtonClick() {
+                    _binding.fragmentPause.visibility = View.GONE
+//                    Handler(Looper.getMainLooper()).removeAllMessages() /* もうすでにないはず */
+                    _binding.flyTiles.removeAllViews()
+                    _binding.txtCountdown.visibility = View.VISIBLE
+                    _binding.txtEndmessage.visibility = View.GONE
+                    _binding.btnRestart2.visibility = View.GONE
+                    _counDownTimer.start()
+                }
+            })
+        /* pause画面でのQuitボタン押下検知のCallBack設定 */
+        _binding.fragmentPause.getFragment<PauseFragment>().setOnQuitButtonClickCallback(
+            object: PauseFragment.OnQuitButtonClickCallback{
+                override fun onQuitButtonClick() {
+                    _binding.fragmentPause.visibility = View.GONE
+                    _binding.flyTiles.removeAllViews()
+                    _binding.txtCountdown.visibility = View.VISIBLE
+                    _binding.txtEndmessage.visibility = View.GONE
+                    _binding.btnRestart2.visibility = View.GONE
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, MainMenuFragment.newInstance())
+                        .commit()
+                }
+            })
+
         /* pauseボタン押下 */
         _binding.btnPause.setOnClickListener {
             isPause = true
@@ -128,18 +157,21 @@ class GameplayFragment: Fragment() {
             }
         })
         /* ゲーム開始カウントダウン */
-        object : CountDownTimer(4000, 1000) {
+        _counDownTimer = object : CountDownTimer(4000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 _binding.txtCountdown.text = (millisUntilFinished/1000).toString()
             }
 
             override fun onFinish() {
+                isPause = false
                 _binding.btnPause.isEnabled = true
                 _binding.txtCountdown.visibility = View.GONE
                 /* ゲーム開始 */
                 Handler(Looper.getMainLooper()).post(run)
             }
-        }.start()
+        }
+        /* カウントダウン開始 */
+        _counDownTimer.start()
 
         /* ゲーム処理メイン */
         run = Runnable {
