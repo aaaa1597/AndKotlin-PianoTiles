@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -23,9 +22,9 @@ import com.example.pianotiles.databinding.FragmentGameplayBinding
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
 
-val PERIODIC_TIME_EASY  = 2000f
-val PERIODIC_TIME_NORMAL= (2000*0.9).toFloat()
-val PERIODIC_TIME_HARD  = (2000*0.8).toFloat()
+const val PERIODIC_TIME_EASY  = 2000f
+const val PERIODIC_TIME_NORMAL= (2000*0.9).toFloat()
+const val PERIODIC_TIME_HARD  = (2000*0.8).toFloat()
 
 class GameplayFragment: Fragment() {
     companion object {
@@ -45,7 +44,7 @@ class GameplayFragment: Fragment() {
     private var _volume: Float = 0f
     private var _screenH: Float = 0f
     @Volatile
-    private var isPause: Boolean = false /* 中断フラグ(Gettin画面移行とかGameOverになったときとか) */
+    private var isPause: Boolean = false /* 中断フラグ(Setting画面移行とかGameOverになったときとか) */
         set(value) {
             /* これでpostDelayした分は停止/再開する */
             field = value
@@ -59,7 +58,7 @@ class GameplayFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        gameViewModel = ViewModelProvider(this, GameplayViewModel.Factory(_volume, requireActivity().application)).get(GameplayViewModel::class.java)
+        gameViewModel = ViewModelProvider(this, GameplayViewModel.Factory(_volume, requireActivity().application))[GameplayViewModel::class.java]
         arguments?.let {
             _level = it.getSerializable("LEVEL", GameLevel::class.java)!!
             _volume= it.getFloat("VOLUME")
