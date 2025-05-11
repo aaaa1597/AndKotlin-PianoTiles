@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 
 class PauseFragment : Fragment() {
+    private lateinit var _onResumeButtonClickCallback: OnResumeButtonClickCallback
     private lateinit var gameViewModel: GameplayViewModel
     private var _volume: Float = 0f
 
@@ -29,10 +30,8 @@ class PauseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         /* resume押下 */
         view.findViewById<Button>(R.id.btn_resume).setOnClickListener {
-            /* このFragmentを消去 */
-            parentFragmentManager.beginTransaction().remove(this).commit()
-            /* GameplayFragment画面に戻る */
-            parentFragmentManager.popBackStack("GameplayFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            /* resume押下通知(呼び側でVisible変更するため) */
+            _onResumeButtonClickCallback.onResumeButtonClick()
         }
         /* 再スタート押下 */
         view.findViewById<Button>(R.id.btn_restart).setOnClickListener {
@@ -50,6 +49,13 @@ class PauseFragment : Fragment() {
         }
     }
 
+    fun setOnResumeButtonClickCallback(callback: OnResumeButtonClickCallback) {
+        _onResumeButtonClickCallback = callback
+    }
+
+    interface OnResumeButtonClickCallback {
+        fun onResumeButtonClick()
+    }
     companion object {
         @JvmStatic
         fun newInstance(volume: Float)

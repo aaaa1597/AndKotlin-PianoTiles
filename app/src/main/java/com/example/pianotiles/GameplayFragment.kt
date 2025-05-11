@@ -73,14 +73,20 @@ class GameplayFragment: Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        /* pause画面でのRusumeボタン押下検知のCallBack設定 */
+        _binding.fragmentPause.getFragment<PauseFragment>().setOnResumeButtonClickCallback(
+            object: PauseFragment.OnResumeButtonClickCallback{
+                override fun onResumeButtonClick() {
+                    isPause = false
+                    _binding.fragmentPause.visibility = View.GONE
+                }
+            })
         /* pauseボタン押下 */
         _binding.btnPause.setOnClickListener {
             isPause = true
-            parentFragmentManager.beginTransaction()
-                .addToBackStack("GameplayFragment")
-                .replace(R.id.fragment_container, PauseFragment.newInstance(_volume))
-                .commit()
+            _binding.fragmentPause.visibility = View.VISIBLE
         }
+        _binding.fragmentPause.visibility = View.GONE
         /* 画面ミスタッチ -> GameOver */
         _binding.rlvRuledline.setOnTouchListener(object: OnTouchListener{
             override fun onTouch(view: View, event: MotionEvent): Boolean {
