@@ -43,7 +43,7 @@ class GameplayFragment: Fragment() {
     private lateinit var run: Runnable      /* ゲーム処理メイン */
     private var _volume: Float = 0f
     private var _screenH: Float = 0f
-    private lateinit var _counDownTimer: CountDownTimer
+    private lateinit var _countDownTimer: CountDownTimer
     @Volatile
     private var isPause: Boolean = false /* 中断フラグ(Setting画面移行とかGameOverになったときとか) */
         set(value) {
@@ -74,7 +74,7 @@ class GameplayFragment: Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        /* pause画面でのRusumeボタン押下検知のCallBack設定 */
+        /* pause画面でのResumeボタン押下検知のCallBack設定 */
         _binding.fragmentPause.getFragment<PauseFragment>().setOnResumeButtonClickCallback(
             object: PauseFragment.OnResumeButtonClickCallback{
                 override fun onResumeButtonClick() {
@@ -92,7 +92,7 @@ class GameplayFragment: Fragment() {
                     _binding.txtCountdown.visibility = View.VISIBLE
                     _binding.txtEndmessage.visibility = View.GONE
                     _binding.btnRestart2.visibility = View.GONE
-                    _counDownTimer.start()
+                    _countDownTimer.start()
                 }
             })
         /* pause画面でのQuitボタン押下検知のCallBack設定 */
@@ -133,8 +133,8 @@ class GameplayFragment: Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    gameViewModel.score.collect {
-                        _binding.txtScore.text = gameViewModel.score.value.toString()
+                    gameViewModel._score.collect {
+                        _binding.txtScore.text = gameViewModel._score.value.toString()
                     }
                 }
             }
@@ -157,7 +157,7 @@ class GameplayFragment: Fragment() {
             }
         })
         /* ゲーム開始カウントダウン */
-        _counDownTimer = object : CountDownTimer(4000, 1000) {
+        _countDownTimer = object : CountDownTimer(4000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 _binding.txtCountdown.text = (millisUntilFinished/1000).toString()
             }
@@ -171,7 +171,7 @@ class GameplayFragment: Fragment() {
             }
         }
         /* カウントダウン開始 */
-        _counDownTimer.start()
+        _countDownTimer.start()
 
         /* ゲーム処理メイン */
         run = Runnable {
@@ -204,6 +204,15 @@ class GameplayFragment: Fragment() {
                     }
                 }
             })
+
+            /* タイルタッチで消去検知 */
+            tileview.setOnRemoveViewCallback(object : TileView.OnRemoveViewCallback {
+                override fun onRemoveView() {
+                    gameViewModel._score.value++
+                }
+            })
+
+            /* タイルタッチで消去の検知 */
             _binding.flyTiles.addView(tileview)
             /* 次の準備 */
             val periodictime = when(_level) {

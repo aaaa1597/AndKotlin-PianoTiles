@@ -26,6 +26,7 @@ class  TileView: View {
     private lateinit var _mediaPlayer:MediaPlayer
     private lateinit var _anim:ObjectAnimator
     private var _OnReachEdgeCallback: OnReachEdgeCallback? = null
+    private var _OnRemoveViewCallback: OnRemoveViewCallback? = null
     /* init */
     private fun init(tile: Tile, screenH: Float, level: GameLevel) {
         layoutParams = FrameLayout.LayoutParams(tile.width.toInt(), (tile.height*tile.rows).toInt())
@@ -79,13 +80,24 @@ class  TileView: View {
             (this.parent as ViewGroup).removeView(this)
             /* 音を鳴らす */
             _mediaPlayer.start()
+            _OnRemoveViewCallback?.onRemoveView()
             return true
         }
         return performClick()
     }
 
+    interface OnReachEdgeCallback {
+        fun onReachEdge()
+    }
     fun setOnReachEdgeCallback(onReachEdgeCallback: OnReachEdgeCallback) {
         _OnReachEdgeCallback = onReachEdgeCallback
+    }
+
+    interface OnRemoveViewCallback {
+        fun onRemoveView()
+    }
+    fun setOnRemoveViewCallback(onRemoveViewCallback: OnRemoveViewCallback) {
+        _OnRemoveViewCallback = onRemoveViewCallback
     }
 
     fun pause() {
@@ -94,9 +106,5 @@ class  TileView: View {
 
     fun resume() {
         _anim.resume()
-    }
-
-    interface OnReachEdgeCallback {
-        fun onReachEdge()
     }
 }

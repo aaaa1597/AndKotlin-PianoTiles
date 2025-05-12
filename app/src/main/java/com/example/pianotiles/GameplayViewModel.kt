@@ -15,11 +15,8 @@ class GameplayViewModel(vol: Float, app: Application) : AndroidViewModel(app) {
             return GameplayViewModel(volume, app) as T
         }
     }
-    /* Context */
-    private val _app: Application = app
     /* スコア */
-    private var _score: MutableStateFlow<Int> = MutableStateFlow(0)
-    var score = _score.asStateFlow()
+    var _score: MutableStateFlow<Int> = MutableStateFlow(0)
     /* 音量 */
     private val _volume: Float = vol
     /* TileQueue */
