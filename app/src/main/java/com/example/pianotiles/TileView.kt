@@ -60,8 +60,6 @@ class  TileView: View {
                 override fun onAnimationRepeat(animator: Animator) { }
             })
         }
-//        _anim.pause()
-//        _anim.resume()
     }
 
     /* onDraw */
@@ -77,6 +75,7 @@ class  TileView: View {
         super.onTouchEvent(event)
         if(event.action == MotionEvent.ACTION_DOWN) {
             /* 自身を消す */
+            _anim.pause()
             (this.parent as ViewGroup).removeView(this)
             /* 音を鳴らす */
             _mediaPlayer.start()
