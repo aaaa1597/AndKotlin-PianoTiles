@@ -20,10 +20,6 @@ class MainMenuViewModel : ViewModel() {
     /* ボリューム設定 */
     private val _volume: MutableStateFlow<Float> = MutableStateFlow(1f)
     val volume = _volume.asStateFlow()
-    fun setVolume(volume: Float/*引数: 0f..1f*/) {
-        _volume.value = volume
-        _jukebox.value.setVolume(_nowidx.value, volume)
-    }
     fun changeVolume(seekbarval: Int/*引数: 0..100*/) {
         _seekbarval = seekbarval
         /* 引数0..100, 出力0f..1f */

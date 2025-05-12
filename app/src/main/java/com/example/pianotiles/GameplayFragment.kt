@@ -59,7 +59,7 @@ class GameplayFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        gameViewModel = ViewModelProvider(this, GameplayViewModel.Factory(_volume, requireActivity().application))[GameplayViewModel::class.java]
+        gameViewModel = ViewModelProvider(this, GameplayViewModel.Factory(requireActivity().application))[GameplayViewModel::class.java]
         arguments?.let {
             _level = it.getSerializable("LEVEL", GameLevel::class.java)!!
             _volume= it.getFloat("VOLUME")
@@ -133,8 +133,8 @@ class GameplayFragment: Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    gameViewModel._score.collect {
-                        _binding.txtScore.text = gameViewModel._score.value.toString()
+                    gameViewModel.score.collect {
+                        _binding.txtScore.text = gameViewModel.score.value.toString()
                     }
                 }
             }
@@ -208,7 +208,7 @@ class GameplayFragment: Fragment() {
             /* タイルタッチで消去検知 */
             tileview.setOnRemoveViewCallback(object : TileView.OnRemoveViewCallback {
                 override fun onRemoveView() {
-                    gameViewModel._score.value++
+                    gameViewModel.score.value++
                 }
             })
 

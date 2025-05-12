@@ -14,7 +14,7 @@ class RuledlineView : View {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int): super(context, attrs, defStyleAttr)
 
     private val _paint: Paint = Paint().apply {
-        setColor(Color.BLACK)
+        color = Color.BLACK
         strokeWidth = 2f
     }
 

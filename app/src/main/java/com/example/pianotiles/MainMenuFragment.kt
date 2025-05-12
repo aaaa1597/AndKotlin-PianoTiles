@@ -63,7 +63,7 @@ class MainMenuFragment : Fragment() {
             viewModel.stopSong()
             parentFragmentManager.beginTransaction()
                 .addToBackStack("MainMenuFragment")
-                .replace(R.id.fragment_container, GameplayFragment.newInstance(viewModel.level.value, viewModel.volume.value.toFloat()))
+                .replace(R.id.fragment_container, GameplayFragment.newInstance(viewModel.level.value,viewModel.volume.value))
                 .commit()
         }
 
@@ -137,14 +137,5 @@ class MainMenuFragment : Fragment() {
                 }
             }
         }
-
-    }
-
-    fun changeVolume(vol: Int) {
-        viewModel.setVolume(vol.toFloat())
-    }
-
-    fun setDefault() {
-        viewModel.init()
     }
 }

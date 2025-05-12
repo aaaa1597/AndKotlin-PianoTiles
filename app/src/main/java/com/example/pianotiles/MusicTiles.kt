@@ -6,21 +6,6 @@ class Tile(val column: Int, val width: Float, val height: Float, val rows: Int, 
 
 class MusicTiles {
     companion object {
-        var music: Array<Music> = arrayOf<Music>(
-            Music(R.raw.jingle_bells, "Jingle Bell"),
-            Music(R.raw.silent_night, "Silent Night"),
-            Music(R.raw.last_christmas, "Last Christmas"),
-            Music(R.raw.xia_yu_tian, "雨の日"),
-            Music(R.raw.hui_bu_hui, "そうか"),
-            Music(R.raw.tian_wai_lai_wu, "地球外物体"),
-            Music(R.raw.hou_lai_yu_jian_ta, "彼に会った"),
-            Music(R.raw.xiao_zhang, "傲慢"),
-            Music(R.raw.yu_wo_wu_guan, "関係ない"),
-            Music(R.raw.fei_niao_he_chan, "鳥と蝉"),
-            Music(R.raw.all_i_want_for_christmas_is_you, "Christmas"),
-            Music(R.raw.we_wish_you_merry_christmas, "Merry Christmas")
-        )
-
         fun create(level: GameLevel, screenW: Int, screenH: Int): ArrayDeque<Tile> {
             return when(level) {
                 GameLevel.easy  -> getKartini(   screenW, 4, screenH, 4)

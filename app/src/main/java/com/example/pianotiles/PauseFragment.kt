@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 
 class PauseFragment : Fragment() {
@@ -21,7 +20,7 @@ class PauseFragment : Fragment() {
         arguments?.let {
             _volume= it.getFloat("VOLUME")
         }
-        gameViewModel = ViewModelProvider(this, GameplayViewModel.Factory(_volume, requireActivity().application))[GameplayViewModel::class.java]
+        gameViewModel = ViewModelProvider(this, GameplayViewModel.Factory(requireActivity().application))[GameplayViewModel::class.java]
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -64,15 +63,5 @@ class PauseFragment : Fragment() {
     }
     interface OnQuitButtonClickCallback {
         fun onQuitButtonClick()
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(volume: Float)
-            = PauseFragment().apply {
-                arguments = Bundle().apply {
-                    putFloat("VOLUME", volume)
-                }
-            }
     }
 }

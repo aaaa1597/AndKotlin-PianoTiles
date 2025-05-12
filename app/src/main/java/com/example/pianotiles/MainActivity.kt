@@ -1,8 +1,5 @@
 package com.example.pianotiles
 
-import android.app.Activity
-import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -21,9 +18,6 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        /* 縦画面固定 */
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
         mainModelView = ViewModelProvider(this)[MainMenuViewModel::class.java]
         supportFragmentManager.beginTransaction()
