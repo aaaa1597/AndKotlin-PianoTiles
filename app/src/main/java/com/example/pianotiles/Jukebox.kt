@@ -16,17 +16,17 @@ class Jukebox(activity: Activity) {
         }
     }
     private var _musicPlayers: ArrayList<AaaMusicPlayer> = arrayListOf(
-        AaaMusicPlayer.create(activity, R.raw.aine, "アイネ・クライネ・ナハトムジーク")                   .apply { mediaPlayer.setOnCompletionListener { it.start() } },
-        AaaMusicPlayer.create(activity, R.raw.borero_1596, "ボレロ")                  .apply { mediaPlayer.setOnCompletionListener { it.start() } },
-        AaaMusicPlayer.create(activity, R.raw.yasoukyoku, "夜想曲")              .apply { mediaPlayer.setOnCompletionListener { it.start() } },
-        AaaMusicPlayer.create(activity, R.raw.gsenjounoaria, "G線上のマリア")                         .apply { mediaPlayer.setOnCompletionListener { it.start() } },
-        AaaMusicPlayer.create(activity, R.raw.ifudoudou_644, "威風堂々")                          .apply { mediaPlayer.setOnCompletionListener { it.start() } },
-        AaaMusicPlayer.create(activity, R.raw.kirakiraboshi, "キラキラ星")                 .apply { mediaPlayer.setOnCompletionListener { it.start() } },
-        AaaMusicPlayer.create(activity, R.raw.hisou, "悲愴")              .apply { mediaPlayer.setOnCompletionListener { it.start() } },
-        AaaMusicPlayer.create(activity, R.raw.syuyo, "主よ人の恵みの喜びよ")                            .apply { mediaPlayer.setOnCompletionListener { it.start() } },
-        AaaMusicPlayer.create(activity, R.raw.tsukinohikari, "月の光")                     .apply { mediaPlayer.setOnCompletionListener { it.start() } },
-        AaaMusicPlayer.create(activity, R.raw.jupitor, "ジュピター")                    .apply { mediaPlayer.setOnCompletionListener { it.start() } },
-        AaaMusicPlayer.create(activity, R.raw.warukyu, "ワルキューレ")  .apply { mediaPlayer.setOnCompletionListener { it.start() } },
+        AaaMusicPlayer.create(activity, R.raw.aine, "アイネ・クライネ・ナハトムジーク").apply { mediaPlayer.setOnCompletionListener { it.start() } },
+        AaaMusicPlayer.create(activity, R.raw.borero_1596, "ボレロ")                   .apply { mediaPlayer.setOnCompletionListener { it.start() } },
+        AaaMusicPlayer.create(activity, R.raw.yasoukyoku, "夜想曲")                    .apply { mediaPlayer.setOnCompletionListener { it.start() } },
+        AaaMusicPlayer.create(activity, R.raw.gsenjounoaria, "G線上のマリア")          .apply { mediaPlayer.setOnCompletionListener { it.start() } },
+        AaaMusicPlayer.create(activity, R.raw.ifudoudou_644, "威風堂々")               .apply { mediaPlayer.setOnCompletionListener { it.start() } },
+        AaaMusicPlayer.create(activity, R.raw.kirakiraboshi, "キラキラ星")             .apply { mediaPlayer.setOnCompletionListener { it.start() } },
+        AaaMusicPlayer.create(activity, R.raw.hisou, "悲愴")                           .apply { mediaPlayer.setOnCompletionListener { it.start() } },
+        AaaMusicPlayer.create(activity, R.raw.syuyo, "主よ人の恵みの喜びよ")           .apply { mediaPlayer.setOnCompletionListener { it.start() } },
+        AaaMusicPlayer.create(activity, R.raw.tsukinohikari, "月の光")                 .apply { mediaPlayer.setOnCompletionListener { it.start() } },
+        AaaMusicPlayer.create(activity, R.raw.jupitor, "ジュピター")                   .apply { mediaPlayer.setOnCompletionListener { it.start() } },
+        AaaMusicPlayer.create(activity, R.raw.warukyu, "ワルキューレ")                 .apply { mediaPlayer.setOnCompletionListener { it.start() } },
     )
     /* 関数 */
     fun play(idx: Int, volume: Float)
